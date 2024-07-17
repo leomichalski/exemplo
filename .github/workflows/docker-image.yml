@@ -1,0 +1,25 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  ci-local:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      name: Clonar o repo
+
+    - name: Build
+      run: docker compose --file docker-compose.local.yml build
+
+    - name: Lint
+      run: docker compose --file docker-compose.local.yml run --rm django ruff check
+
+    - name: Test
+      run: docker compose --file docker-compose.local.yml run --rm django coverage run -m pytest
+
+    # - name: Push
+    #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
