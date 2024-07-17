@@ -21,5 +21,9 @@ jobs:
     - name: Test
       run: docker compose --file docker-compose.local.yml run --rm django coverage run -m pytest
 
-    # - name: Push
-    #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Push
+      run: |
+        docker tag exemplo_local_django leommiranda/exemplo_local_django:latest
+        docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_PASSWORD }}
+        docker push leommiranda/exemplo_local_django:latest
+
