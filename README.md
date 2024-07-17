@@ -1,54 +1,45 @@
 # Exemplo
 
-Exemplo
+## Comandos de cada etapa
 
-[![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+### Etapa Build
 
-License: MIT
+```bash
+docker compose --file docker-compose.local.yml build
+```
 
-## Settings
+### Etapa Lint
 
-Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
+```bash
+docker compose --file docker-compose.local.yml run --no-deps --rm django ruff check
+```
 
-## Basic Commands
+### Etapa Teste
 
-### Setting Up Your Users
+```bash
+docker compose --file docker-compose.local.yml run --rm django coverage run -m pytest
+```
 
-- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+### Etapa Push
 
-- To create a **superuser account**, use this command:
+Caso o comando vá ser utilizado em um computador pessoal, substituir "SUBSTITUIR_POR_USUARIO" pelo seu usuário do DockerHub, e substituir "SUBSTITUIR_POR_SENHA" pela sua senha.
 
-      $ python manage.py createsuperuser
+Caso o comando vá ser rodado em uma pipeline de CI, substituir por variáveis adequadas. Por exemplo, em um workflow do GitHub, o nome de usuário poderia ser especificado assim: `${{ secrets.DOCKERHUB_USERNAME }}`.
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+#### Escolher nome da imagem docker
 
-### Type checks
+```bash
+docker tag exemplo_local_django docker.io/SUBSTITUIR_POR_USUARIO/exemplo_local_django:latest
+```
 
-Running type checks with mypy:
+#### Faz login no DockerHub
 
-    $ mypy exemplo
+```bash
+docker login --username SUBSTITUIR_POR_USUARIO --password SUBSTITUIR_POR_SENHA
+```
 
-### Test coverage
+#### Armazena a imagem docker no DockerHub
 
-To run the tests, check your test coverage, and generate an HTML coverage report:
-
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
-
-#### Running tests with pytest
-
-    $ pytest
-
-### Live reloading and Sass CSS compilation
-
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).
-
-## Deployment
-
-The following details how to deploy this application.
-
-### Docker
-
-See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+```bash
+docker push exemplo_local_django docker.io/SUBSTITUIR_POR_USUARIO/exemplo_local_django:latest
+```
