@@ -17,7 +17,7 @@ SECRET_KEY = env(
 ALLOWED_HOSTS = env(
     "ALLOWED_HOSTS",
     default="localhost,0.0.0.0,127.0.0.1",
-).split(',')
+).split(",")
 
 # CACHES
 # ------------------------------------------------------------------------------
